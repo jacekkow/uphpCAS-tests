@@ -1,0 +1,5 @@
+<cas:serviceResponse xmlns:cas='http://www.yale.edu/tp/cas'>
+  <cas:authenticationFailure code='INVALID_REQUEST'>
+    No ticket supplied
+  </cas:authenticationFailure>
+</cas:serviceResponse>
