@@ -13,54 +13,56 @@ import Common
 
 @RunWith(Parameterized.class)
 class StandardTests {
-	@Parameters
+	@Parameters(name = "{0}")
 	public static Iterable<Object[]> data() {
 		return [
 			// cas, cafile, method, login page expected text, main page expected text
 			
 			// HTTP should succeed
-			[ "http://127.0.0.1:8081/cas.php", null, null, "Authenticated as user123", "Authenticated as user123" ] as Object[],
-			[ "http://127.0.0.1:8081/cas.php", null, "GET", "Authenticated as user123", "Authenticated as user123" ] as Object[],
-			[ "http://127.0.0.1:8081/cas.php", null, "POST", "Authenticated as user123", "Authenticated as user123" ] as Object[],
+			[ "HTTP",  "http://127.0.0.1:8081/cas.php", null, null, "Authenticated as user123", "Authenticated as user123" ] as Object[],
+			[ "HTTP GET", "http://127.0.0.1:8081/cas.php", null, "GET", "Authenticated as user123", "Authenticated as user123" ] as Object[],
+			[ "HTTP POST", "http://127.0.0.1:8081/cas.php", null, "POST", "Authenticated as user123", "Authenticated as user123" ] as Object[],
 			
 			// HTTPS should succeed
-			[ "https://127.0.0.1:8444/cas.php", "/tmp/correct.crt", null, "Authenticated as user123", "Authenticated as user123" ] as Object[],
-			[ "https://127.0.0.1:8444/cas.php", "/tmp/correct.crt", "GET", "Authenticated as user123", "Authenticated as user123" ] as Object[],
-			[ "https://127.0.0.1:8444/cas.php", "/tmp/correct.crt", "POST", "Authenticated as user123", "Authenticated as user123" ] as Object[],
+			[ "HTTPS", "https://127.0.0.1:8444/cas.php", "/tmp/correct.crt", null, "Authenticated as user123", "Authenticated as user123" ] as Object[],
+			[ "HTTPS GET", "https://127.0.0.1:8444/cas.php", "/tmp/correct.crt", "GET", "Authenticated as user123", "Authenticated as user123" ] as Object[],
+			[ "HTTPS POST", "https://127.0.0.1:8444/cas.php", "/tmp/correct.crt", "POST", "Authenticated as user123", "Authenticated as user123" ] as Object[],
 			
 			// system CAfile does not contain this self-signed certificate - should fail
-			[ "https://127.0.0.1:8444/cas.php", null, null, "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8444/cas.php", null, "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8444/cas.php", null, "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS SysCA", "https://127.0.0.1:8444/cas.php", null, null, "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS SysCA GET", "https://127.0.0.1:8444/cas.php", null, "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS SysCA POST", "https://127.0.0.1:8444/cas.php", null, "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
 			// wrongcn.crt does not contain correct.crt - should fail
-			[ "https://127.0.0.1:8444/cas.php", "/tmp/wrongcn.crt", null, "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8444/cas.php", "/tmp/wrongcn.crt", "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8444/cas.php", "/tmp/wrongcn.crt", "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS WrongCA", "https://127.0.0.1:8444/cas.php", "/tmp/wrongcn.crt", null, "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS WrongCA GET", "https://127.0.0.1:8444/cas.php", "/tmp/wrongcn.crt", "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS WrongCA POST", "https://127.0.0.1:8444/cas.php", "/tmp/wrongcn.crt", "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
 			
 			// system CAfile does not contain this self-signed certificate - should fail
-			[ "https://127.0.0.1:8445/cas.php", null, null, "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8445/cas.php", null, "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8445/cas.php", null, "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 SysCA", "https://127.0.0.1:8445/cas.php", null, null, "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 SysCA GET", "https://127.0.0.1:8445/cas.php", null, "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 SysCA POST", "https://127.0.0.1:8445/cas.php", null, "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
 			// correct.crt does not contain wrongcn.crt - should fail
-			[ "https://127.0.0.1:8445/cas.php", "/tmp/correct.crt", null, "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8445/cas.php", "/tmp/correct.crt", "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8445/cas.php", "/tmp/correct.crt", "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 WrongCA", "https://127.0.0.1:8445/cas.php", "/tmp/correct.crt", null, "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 WrongCA GET", "https://127.0.0.1:8445/cas.php", "/tmp/correct.crt", "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 WrongCA POST", "https://127.0.0.1:8445/cas.php", "/tmp/correct.crt", "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
 			// wrongcn.crt is issued to 127.0.0.2, not 127.0.0.1 - should fail
-			[ "https://127.0.0.1:8445/cas.php", "/tmp/wrongcn.crt", null, "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8445/cas.php", "/tmp/wrongcn.crt", "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
-			[ "https://127.0.0.1:8445/cas.php", "/tmp/wrongcn.crt", "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 CN", "https://127.0.0.1:8445/cas.php", "/tmp/wrongcn.crt", null, "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 CN GET", "https://127.0.0.1:8445/cas.php", "/tmp/wrongcn.crt", "GET", "CAS server is unavailable", "Not authenticated." ] as Object[],
+			[ "HTTPS2 CN POST", "https://127.0.0.1:8445/cas.php", "/tmp/wrongcn.crt", "POST", "CAS server is unavailable", "Not authenticated." ] as Object[],
 		]
 	}
 	
 	@Parameter(0)
-	public String cas
+	public String name
 	@Parameter(1)
-	public String cafile
+	public String cas
 	@Parameter(2)
-	public String method
+	public String cafile
 	@Parameter(3)
-	public String expectLogin
+	public String method
 	@Parameter(4)
+	public String expectLogin
+	@Parameter(5)
 	public String expectMain
 	
 	@Test
