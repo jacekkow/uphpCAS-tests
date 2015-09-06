@@ -1,7 +1,7 @@
 apply plugin: 'groovy'
 
 dependencies {
-	groovy 'org.codehaus.groovy:groovy-all:2.4.4'
+	compile 'org.codehaus.groovy:groovy-all:2.4.4'
 	compile 'junit:junit:4.12'
 	compile 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1'
 }
