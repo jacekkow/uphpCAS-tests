@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get -y install gradle openssl stunnel
+sudo apt-get -y install default-jdk gradle openssl stunnel
 
 openssl genrsa -out /tmp/correct.key 1024
 openssl req -new -key /tmp/correct.key -out /tmp/correct.crt -subj '/CN=127.0.0.1/' -x509
