@@ -1,16 +1,19 @@
 #!/bin/bash
 
-sudo add-apt-repository -y ppa:cwchien/gradle
-sudo apt-get update
-sudo apt-get -y install gradle-ppa openjdk-7-jdk openssl stunnel
+set -e
 
-sudo update-java-alternatives -s java-1.7.0-openjdk-amd64
-sudo rm /usr/lib/jvm/default-java
+function genAndSign() {
+	local cn=$1
+	local file=$2
+	openssl genrsa -out "/tmp/${file}.key" 2048
+	openssl req -new -key "/tmp/${file}.key" -out "/tmp/${file}.csr" -subj "/CN=${cn}/"
+	openssl x509 -req -in "/tmp/${file}.csr" -out "/tmp/${file}.crt" \
+		-CA /tmp/ca.crt -CAkey /tmp/ca.key -CAcreateserial
+	cat "/tmp/${file}.crt" "/tmp/${file}.key" > "/tmp/${file}.pem"
+}
 
-openssl genrsa -out /tmp/correct.key 1024
-openssl req -new -key /tmp/correct.key -out /tmp/correct.crt -subj '/CN=127.0.0.1/' -x509
-cat /tmp/correct.crt /tmp/correct.key > /tmp/correct.pem
+openssl genrsa -out /tmp/ca.key 2048
+openssl req -new -key /tmp/ca.key -out /tmp/ca.crt -subj '/CN=Test CA/' -x509
 
-openssl genrsa -out /tmp/wrongcn.key 1024
-openssl req -new -key /tmp/wrongcn.key -out /tmp/wrongcn.crt -subj '/CN=127.0.0.2/' -x509
-cat /tmp/wrongcn.crt /tmp/wrongcn.key > /tmp/wrongcn.pem 
+genAndSign "127.0.0.1" "correct"
+genAndSign "127.0.0.2" "wrongcn"
